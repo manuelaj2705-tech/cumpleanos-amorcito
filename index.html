@@ -573,12 +573,15 @@ Feliz cumpleaños, mi amor. Te amo más de lo que las palabras pueden decir.</p>
 
   // ---------- Gallery (lista tus fotos aquí con el nombre EXACTO que tengan en el repo) ----------
   const gallery = document.getElementById('gallery');
-  const photoFiles = ['foto1.jpeg', 'foto2.JPG', 'foto3.jpeg']; // agrega o quita nombres aquí
+  const photoFiles = ['foto1.jpeg', 'foto2.jpeg', 'foto3.jpeg']; // agrega o quita nombres aquí
   photoFiles.forEach((filename, i) => {
     const fig = document.createElement('figure');
     const img = document.createElement('img');
     img.alt = `Recuerdo ${i + 1}`;
-    img.onerror = () => { fig.remove(); /* no existe este archivo, se quita */ };
+    img.onerror = () => {
+      // en vez de ocultar el error, lo mostramos directo en la página para diagnosticar fácil
+      fig.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:8px;text-align:center;font-family:'Cormorant Garamond',serif;font-size:0.85rem;color:var(--blush);">No cargó:<br>${filename}</div>`;
+    };
     fig.appendChild(img);
     gallery.appendChild(fig);
     img.src = filename; // se asigna después de estar en el documento para que sí cargue
