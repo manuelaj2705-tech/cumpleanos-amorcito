@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños, Mi Amor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Playfair+Display:ital,wght@0,600;1,600&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wine: #4a0069;
+    --wine-deep: #2a0040;
+    --plum: #7900ac;
+    --plum-light: #9b2fd1;
+    --violet-glow: #a94ed6;
+    --blush: #f4c9d1;
+    --rose-deep: #b5495b;
+    --gold: #ffd700;
+    --gold-soft: #ffe066;
+    --cream: #f8ecec;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html,body{
+    background:
+      radial-gradient(ellipse 900px 600px at 18% 8%, rgba(212,175,55,0.10), transparent 55%),
+      radial-gradient(ellipse 800px 700px at 85% 12%, rgba(181,73,91,0.20), transparent 50%),
+      radial-gradient(ellipse 1000px 900px at 50% 100%, rgba(138,74,143,0.28), transparent 60%),
+      radial-gradient(ellipse at top, var(--plum-light), var(--plum) 45%, var(--wine) 78%, var(--wine-deep) 100%);
+    background-attachment: fixed;
+    color: var(--cream);
+    font-family: 'Lora', serif;
+    overflow-x:hidden;
+    scroll-behavior:smooth;
+  }
+
+  h1,h2,.display{
+    font-family:'Playfair Display', serif;
+  }
+
+  .script{
+    font-family:'Cormorant Garamond', serif;
+  }
+
+  /* ---------- FALLING HEARTS AMBIENT ANIMATION ---------- */
+  #petals{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+    overflow:hidden;
+  }
+  .petal{
+    position:absolute;
+    top:-5%;
+    width:15px;
+    height:15px;
+    background: radial-gradient(circle at 30% 30%, var(--blush), var(--rose-deep));
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 21c-.4 0-.8-.1-1.1-.4C7.1 17.9 2 13.6 2 8.8 2 5.6 4.4 3 7.5 3c1.7 0 3.3.8 4.5 2.1C13.2 3.8 14.8 3 16.5 3 19.6 3 22 5.6 22 8.8c0 4.8-5.1 9.1-8.9 11.8-.3.3-.7.4-1.1.4z'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 21c-.4 0-.8-.1-1.1-.4C7.1 17.9 2 13.6 2 8.8 2 5.6 4.4 3 7.5 3c1.7 0 3.3.8 4.5 2.1C13.2 3.8 14.8 3 16.5 3 19.6 3 22 5.6 22 8.8c0 4.8-5.1 9.1-8.9 11.8-.3.3-.7.4-1.1.4z'/></svg>");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    opacity:0.8;
+    animation: fall linear infinite;
+  }
+  @keyframes fall{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg); }
+    100%{ transform: translateY(110vh) translateX(var(--drift,40px)) rotate(360deg); }
+  }
+
+  /* ---------- GALAXY-OF-HEARTS INTRO ---------- */
+  #envelope-screen{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(ellipse 700px 600px at 25% 20%, rgba(212,175,55,0.12), transparent 55%),
+      radial-gradient(ellipse 700px 600px at 80% 80%, rgba(181,73,91,0.22), transparent 55%),
+      radial-gradient(ellipse at center, var(--plum-light), var(--plum) 40%, var(--wine) 78%, var(--wine-deep) 100%);
+    transition: opacity 1s ease, visibility 1s ease;
+    overflow:hidden;
+  }
+  #envelope-screen.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
+  #envelope-screen.ready{
+    cursor:pointer;
+  }
+
+  /* faint background starfield behind the heart-galaxy */
+  #starfield{
+    position:absolute;
+    inset:0;
+    z-index:0;
+  }
+  #starfield span{
+    position:absolute;
+    width:2px;
+    height:2px;
+    border-radius:50%;
+    background: var(--gold-soft);
+    opacity:0.5;
+    animation: twinkle ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ opacity:0.15; }
+    50%{ opacity:0.9; }
+  }
+
+  #heart-galaxy{
+    position:relative;
+    z-index:1;
+    filter: drop-shadow(0 10px 34px rgba(0,0,0,0.5));
+  }
+  #galaxy-glow{
+    opacity:0;
+    transition: opacity 1.8s ease;
+  }
+  #galaxy-group{
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: galaxySpin 50s linear infinite;
+  }
+  @keyframes galaxySpin{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+  }
+  #center-heart{
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity:0;
+    filter: drop-shadow(0 0 12px var(--gold));
+  }
+  #center-heart.show{
+    animation: centerPulse 2.4s ease-in-out infinite, centerFadeIn 0.9s ease forwards;
+  }
+  @keyframes centerFadeIn{
+    from{ opacity:0; transform:scale(0.4); }
+    to{ opacity:1; transform:scale(1); }
+  }
+  @keyframes centerPulse{
+    0%,100%{ transform: scale(1); }
+    50%{ transform: scale(1.22); }
+  }
+  #galaxy-hearts use{
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity:0;
+    animation: starPop 0.8s ease forwards;
+  }
+  @keyframes starPop{
+    0%{ transform: scale(0) rotate(-20deg); opacity:0; }
+    55%{ transform: scale(1.25) rotate(6deg); opacity:1; }
+    100%{ transform: scale(1) rotate(0deg); opacity:0.92; }
+  }
+  #galaxy-hearts use.twinkling{
+    animation: starPop 0.8s ease forwards, starTwinkle 3s ease-in-out 0.8s infinite;
+  }
+  @keyframes starTwinkle{
+    0%,100%{ opacity:0.65; }
+    50%{ opacity:1; }
+  }
+
+  #envelope-hint{
+    margin-top:26px;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color: var(--gold-soft);
+    font-size:1.1rem;
+    letter-spacing:0.5px;
+    opacity:0.85;
+    transition: opacity 0.6s ease;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- MAIN CONTENT ---------- */
+  main{
+    position:relative;
+    z-index:2;
+  }
+
+  section{
+    padding: 90px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align:center;
+  }
+
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding-top: 60px;
+  }
+  .eyebrow{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color: var(--gold-soft);
+    letter-spacing:2px;
+    font-size:1rem;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height:1.15;
+    font-weight:600;
+    color: var(--cream);
+  }
+  .hero h1 span{
+    color: var(--gold);
+    font-style:italic;
+  }
+  .hero-sub{
+    margin-top:22px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.3rem;
+    color: var(--blush);
+    max-width:520px;
+  }
+
+  .divider{
+    width:70px;
+    height:1px;
+    background: var(--gold);
+    margin: 36px auto;
+    opacity:0.7;
+  }
+
+  /* Counter */
+  .counter-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .counter-number{
+    font-family:'Playfair Display', serif;
+    font-size: clamp(3.5rem, 10vw, 6.5rem);
+    color: var(--gold);
+    font-weight:600;
+    line-height:1;
+  }
+  .counter-label{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.2rem;
+    color: var(--blush);
+  }
+
+  /* Letter / message */
+  .letter-card{
+    background: linear-gradient(180deg, rgba(248,236,236,0.06), rgba(248,236,236,0.02));
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 14px;
+    padding: 48px 36px;
+    position:relative;
+  }
+  .letter-card::before{
+    content:"❝";
+    position:absolute;
+    top:-18px; left:28px;
+    font-size:3rem;
+    color: var(--gold);
+    font-family:'Playfair Display', serif;
+    background: var(--wine);
+    padding:0 10px;
+  }
+  .letter-text{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.35rem;
+    line-height:1.8;
+    color: var(--cream);
+    font-style:italic;
+    white-space:pre-line;
+  }
+  .signature{
+    margin-top:28px;
+    font-family:'Playfair Display', serif;
+    font-size:1.2rem;
+    color: var(--gold);
+  }
+
+  /* Gallery */
+  .gallery-title{
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    margin-bottom:12px;
+  }
+  .gallery-sub{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color: var(--blush);
+    margin-bottom:40px;
+  }
+  .gallery{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:14px;
+  }
+  .gallery figure{
+    margin:0;
+    overflow:hidden;
+    border-radius:10px;
+    border: 1px solid rgba(212,175,55,0.3);
+    aspect-ratio: 1 / 1;
+    background: rgba(255,255,255,0.03);
+  }
+  .gallery img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition: transform 0.5s ease;
+  }
+  .gallery figure:hover img{
+    transform: scale(1.08);
+  }
+  @media (max-width: 640px){
+    .gallery{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Footer */
+  footer{
+    text-align:center;
+    padding: 60px 24px 90px;
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    color: var(--gold-soft);
+  }
+
+  /* Music control */
+  #music-toggle{
+    position:fixed;
+    bottom:22px;
+    right:22px;
+    z-index:40;
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    background: linear-gradient(160deg, var(--rose-deep), var(--plum));
+    border: 1px solid var(--gold-soft);
+    color: var(--gold-soft);
+    font-size:1.3rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+  }
+  #music-toggle:hover{ transform: scale(1.08); }
+  #music-toggle.playing{
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(212,175,55,0.5); }
+    50%{ box-shadow: 0 0 0 10px rgba(212,175,55,0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .petal, #music-toggle.playing, #galaxy-group{ animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="petals"></div>
+
+<!-- Galaxy-of-hearts intro -->
+<div id="envelope-screen">
+  <div id="starfield"></div>
+  <svg id="heart-galaxy" viewBox="0 0 400 400" width="300" height="300">
+    <defs>
+      <symbol id="heart-shape" viewBox="0 0 24 24">
+        <path d="M12 21c-.4 0-.8-.1-1.1-.4C7.1 17.9 2 13.6 2 8.8 2 5.6 4.4 3 7.5 3c1.7 0 3.3.8 4.5 2.1C13.2 3.8 14.8 3 16.5 3 19.6 3 22 5.6 22 8.8c0 4.8-5.1 9.1-8.9 11.8-.3.3-.7.4-1.1.4z"/>
+      </symbol>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#e9d18f" stop-opacity="0.55"/>
+        <stop offset="100%" stop-color="#e9d18f" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle id="galaxy-glow" cx="200" cy="200" r="120" fill="url(#glow)"></circle>
+    <g id="galaxy-group">
+      <g id="galaxy-hearts"></g>
+      <use id="center-heart" href="#heart-shape" x="186" y="186" width="28" height="28" fill="var(--gold)"></use>
+    </g>
+  </svg>
+  <div id="envelope-hint">Como estrellas que se encuentran, hasta formar una sola constelación...</div>
+</div>
+
+<main>
+
+  <section class="hero">
+    <div class="eyebrow">Un día especial para</div>
+    <h1>Feliz cumpleaños,<br><span>Mi Amor</span></h1>
+    <p class="hero-sub">Hoy el mundo celebra el día en que llegaste a él. Yo, cada día, celebro que estás en el mío.</p>
+    <div class="divider"></div>
+    <div class="counter-wrap">
+      <div class="counter-number" id="days-counter">0</div>
+      <div class="counter-label">días juntos, y contando</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="letter-card">
+      <p class="letter-text">Hoy no es un día cualquiera, es el día en que llegaste al mundo tú, la persona que hizo que todo tuviera más sentido.
+
+Desde que estás en mi vida, cada día se siente más bonito, más tranquilo, más nuestro. Gracias por tu risa, por tu manera de mirarme, por todo lo que eres.
+
+Feliz cumpleaños, mi amor. Te amo más de lo que las palabras pueden decir.</p>
+      <div class="signature">— Con todo mi corazón</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="gallery-title">Nuestros recuerdos</h2>
+    <p class="gallery-sub">Cada foto, un momento que guardo para siempre</p>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <footer>
+    Hecho con amor, para ti. 🤍
+  </footer>
+
+</main>
+
+<button id="music-toggle" title="Reproducir música">▶</button>
+<audio id="bg-music" src="cancion.mp3" loop></audio>
+
+<script>
+  // ---------- Petals ----------
+  const petalsContainer = document.getElementById('petals');
+  const PETAL_COUNT = 22;
+  for(let i=0;i<PETAL_COUNT;i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const left = Math.random()*100;
+    const duration = 8 + Math.random()*10;
+    const delay = Math.random()*10;
+    const drift = (Math.random()*80 - 40) + 'px';
+    const scale = 0.6 + Math.random()*0.9;
+    p.style.left = left + 'vw';
+    p.style.animationDuration = duration + 's';
+    p.style.animationDelay = '-' + delay + 's';
+    p.style.setProperty('--drift', drift);
+    p.style.transform = `scale(${scale})`;
+    petalsContainer.appendChild(p);
+  }
+
+  // ---------- Starfield behind the galaxy ----------
+  const starfield = document.getElementById('starfield');
+  const STAR_COUNT = 60;
+  for(let i=0;i<STAR_COUNT;i++){
+    const s = document.createElement('span');
+    s.style.left = Math.random()*100 + '%';
+    s.style.top = Math.random()*100 + '%';
+    s.style.animationDuration = (2 + Math.random()*3) + 's';
+    s.style.animationDelay = (Math.random()*4) + 's';
+    starfield.appendChild(s);
+  }
+
+  // ---------- Heart-galaxy intro animation ----------
+  const envelopeScreen = document.getElementById('envelope-screen');
+  const hint = document.getElementById('envelope-hint');
+  const galaxyHearts = document.getElementById('galaxy-hearts');
+  const centerHeart = document.getElementById('center-heart');
+  const galaxyGlow = document.getElementById('galaxy-glow');
+  let transitioned = false;
+
+  // Genera posiciones a lo largo de brazos espirales (como una galaxia)
+  // para que los corazones pequeños se acomoden formando espirales
+  // alrededor de un corazón central.
+  function buildGalaxyPositions(){
+    const centerX = 200, centerY = 200;
+    const arms = 3;
+    const perArm = 26;
+    const maxRadius = 165;
+    const palette = ['var(--gold)', 'var(--blush)', 'var(--gold-soft)', 'var(--rose-deep)'];
+    const positions = [];
+
+    for(let a = 0; a < arms; a++){
+      const armOffset = a * (2 * Math.PI / arms);
+      for(let i = 0; i < perArm; i++){
+        const t = i / perArm;
+        const angle = armOffset + t * Math.PI * 2.6;
+        const radius = 22 + t * maxRadius;
+        const jitterAngle = (Math.random() - 0.5) * 0.25;
+        const jitterRadius = (Math.random() - 0.5) * 10;
+        const x = centerX + (radius + jitterRadius) * Math.cos(angle + jitterAngle);
+        const y = centerY + (radius + jitterRadius) * Math.sin(angle + jitterAngle) * 0.72;
+        positions.push({
+          x, y,
+          t,
+          size: 6 + (1 - t) * 7 + Math.random() * 3,
+          color: palette[Math.floor(Math.random() * palette.length)]
+        });
+      }
+    }
+    // ordena del centro hacia afuera para que la galaxia "nazca" desde adentro
+    return positions.sort((p1, p2) => p1.t - p2.t);
+  }
+
+  const galaxyPositions = buildGalaxyPositions();
+
+  function goToMain(){
+    if(transitioned) return;
+    transitioned = true;
+    envelopeScreen.classList.add('hide');
+    const audio = document.getElementById('bg-music');
+    audio.play().then(() => {
+      document.getElementById('music-toggle').classList.add('playing');
+      document.getElementById('music-toggle').textContent = '❙❙';
+    }).catch(() => { /* autoplay bloqueado, el usuario puede usar el botón */ });
+  }
+
+  function growGalaxy(){
+    // corazón central aparece primero, como el núcleo de la galaxia
+    setTimeout(() => {
+      galaxyGlow.style.opacity = '1';
+      centerHeart.classList.add('show');
+    }, 200);
+
+    const startDelay = 700;
+    galaxyPositions.forEach((pos, i) => {
+      setTimeout(() => {
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        use.setAttribute('href', '#heart-shape');
+        use.setAttribute('x', pos.x - pos.size / 2);
+        use.setAttribute('y', pos.y - pos.size / 2);
+        use.setAttribute('width', pos.size);
+        use.setAttribute('height', pos.size);
+        use.setAttribute('fill', pos.color);
+        use.classList.add('twinkling');
+        galaxyHearts.appendChild(use);
+      }, startDelay + i * 28);
+    });
+
+    const totalTime = startDelay + galaxyPositions.length * 28 + 2200;
+    setTimeout(() => {
+      hint.style.opacity = '0';
+    }, totalTime - 500);
+    setTimeout(goToMain, totalTime);
+  }
+
+  growGalaxy();
+  envelopeScreen.addEventListener('click', goToMain); // permite saltar la intro tocando en cualquier momento
+
+  // ---------- Days together counter ----------
+  const startDate = new Date(2026, 4, 24); // 24 de mayo de 2026 (mes 4 = mayo, 0-indexado)
+  const counterEl = document.getElementById('days-counter');
+  function updateCounter(){
+    const now = new Date();
+    const diffMs = now - startDate;
+    const days = Math.max(0, Math.floor(diffMs / (1000*60*60*24)));
+    counterEl.textContent = days.toLocaleString('es-ES');
+  }
+  updateCounter();
+  setInterval(updateCounter, 60000);
+
+  // ---------- Gallery (auto-detects available photos) ----------
+  const gallery = document.getElementById('gallery');
+  const MAX_PHOTOS = 20; // se detendrá automáticamente al primer archivo que no exista
+  let loaded = 0;
+  for(let i=1;i<=MAX_PHOTOS;i++){
+    const img = new Image();
+    img.src = `fotos/foto${i}.jpg`;
+    img.alt = `Recuerdo ${i}`;
+    img.loading = 'lazy';
+    img.onload = () => {
+      const fig = document.createElement('figure');
+      fig.appendChild(img);
+      gallery.appendChild(fig);
+      loaded++;
+    };
+    img.onerror = () => { /* no existe esta foto, se ignora */ };
+  }
+
+  // ---------- Music toggle ----------
+  const musicBtn = document.getElementById('music-toggle');
+  const audio = document.getElementById('bg-music');
+  musicBtn.addEventListener('click', () => {
+    if(audio.paused){
+      audio.play().catch(()=>{});
+      musicBtn.classList.add('playing');
+      musicBtn.textContent = '❙❙';
+    } else {
+      audio.pause();
+      musicBtn.classList.remove('playing');
+      musicBtn.textContent = '▶';
+    }
+  });
+</script>
+
+</body>
+</html>
