@@ -575,16 +575,13 @@ Feliz cumpleaños, mi amor. Te amo más de lo que las palabras pueden decir.</p>
   const gallery = document.getElementById('gallery');
   const photoFiles = ['foto1.jpeg', 'foto2.JPG', 'foto3.jpeg']; // agrega o quita nombres aquí
   photoFiles.forEach((filename, i) => {
-    const img = new Image();
-    img.src = filename;
+    const fig = document.createElement('figure');
+    const img = document.createElement('img');
     img.alt = `Recuerdo ${i + 1}`;
-    img.loading = 'lazy';
-    img.onload = () => {
-      const fig = document.createElement('figure');
-      fig.appendChild(img);
-      gallery.appendChild(fig);
-    };
-    img.onerror = () => { /* no existe este archivo, se ignora */ };
+    img.onerror = () => { fig.remove(); /* no existe este archivo, se quita */ };
+    fig.appendChild(img);
+    gallery.appendChild(fig);
+    img.src = filename; // se asigna después de estar en el documento para que sí cargue
   });
 
   // ---------- Music toggle ----------
