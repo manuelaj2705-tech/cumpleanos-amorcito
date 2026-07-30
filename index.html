@@ -571,23 +571,21 @@ Feliz cumpleaños, mi amor. Te amo más de lo que las palabras pueden decir.</p>
   updateCounter();
   setInterval(updateCounter, 60000);
 
-  // ---------- Gallery (auto-detects available photos) ----------
+  // ---------- Gallery (lista tus fotos aquí con el nombre EXACTO que tengan en el repo) ----------
   const gallery = document.getElementById('gallery');
-  const MAX_PHOTOS = 20; // se detendrá automáticamente al primer archivo que no exista
-  let loaded = 0;
-  for(let i=1;i<=MAX_PHOTOS;i++){
+  const photoFiles = ['foto1.jpeg', 'foto2.JPG', 'foto3.jpeg']; // agrega o quita nombres aquí
+  photoFiles.forEach((filename, i) => {
     const img = new Image();
-    img.src = `fotos/foto${i}.jpg`;
-    img.alt = `Recuerdo ${i}`;
+    img.src = filename;
+    img.alt = `Recuerdo ${i + 1}`;
     img.loading = 'lazy';
     img.onload = () => {
       const fig = document.createElement('figure');
       fig.appendChild(img);
       gallery.appendChild(fig);
-      loaded++;
     };
-    img.onerror = () => { /* no existe esta foto, se ignora */ };
-  }
+    img.onerror = () => { /* no existe este archivo, se ignora */ };
+  });
 
   // ---------- Music toggle ----------
   const musicBtn = document.getElementById('music-toggle');
